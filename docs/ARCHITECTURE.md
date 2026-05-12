@@ -82,7 +82,7 @@ Direction mapping:
 8 Southeast
 ```
 
-`GridMovementEngine` clamps to board boundaries by default and can be configured for wraparound.
+`GridMovementEngine` uses boundary reflection by default: when a generated movement would leave the board, the offending axis is inverted and the remaining steps in that distance group travel back inward. This keeps quantum-generated paths unpredictable while preventing the planchette from burning hundreds of clamped steps in a corner. A stuck-movement threshold still inverts the active direction after repeated non-movement as a safety net. Wraparound remains available as a configuration option.
 
 ## Response rules
 

@@ -23,6 +23,7 @@ public sealed class GridMovementEngine
         }
 
         var current = _options.WrapAtBoardEdges ? board.WrapNode(start) : board.ClampNode(start);
+        var stuckMovementCount = 0;
         var nodes = new List<GridNode> { current };
 
         for (var i = 0; i < directions.Count; i++)
@@ -37,13 +38,69 @@ public sealed class GridMovementEngine
 
             for (var step = 0; step < distance; step++)
             {
-                var candidate = new GridNode(current.X + delta.X, current.Y + delta.Y);
-                current = _options.WrapAtBoardEdges ? board.WrapNode(candidate) : board.ClampNode(candidate);
+                current = MoveOneNode(board, current, ref delta, ref stuckMovementCount);
                 nodes.Add(current);
             }
         }
 
         return nodes;
+    }
+
+    private GridNode MoveOneNode(
+        BoardModel board,
+        GridNode current,
+        ref GridNode delta,
+        ref int stuckMovementCount)
+    {
+        var next = new GridNode(current.X + delta.X, current.Y + delta.Y);
+
+        if (_options.WrapAtBoardEdges)
+        {
+            return board.WrapNode(next);
+        }
+
+        if (_options.ReflectAtBoardEdges)
+        {
+            next = ReflectOffEdges(board, current, ref delta);
+        }
+
+        var resolved = board.ClampNode(next);
+        if (resolved == current)
+        {
+            stuckMovementCount++;
+            if (stuckMovementCount >= _options.StuckMovementThreshold)
+            {
+                delta = new GridNode(-delta.X, -delta.Y);
+                resolved = board.ClampNode(new GridNode(current.X + delta.X, current.Y + delta.Y));
+                stuckMovementCount = 0;
+            }
+        }
+        else
+        {
+            stuckMovementCount = 0;
+        }
+
+        return resolved;
+    }
+
+    private static GridNode ReflectOffEdges(BoardModel board, GridNode current, ref GridNode delta)
+    {
+        var nextX = current.X + delta.X;
+        var nextY = current.Y + delta.Y;
+
+        if (nextX < 0 || nextX > board.MaxNodeX)
+        {
+            delta = delta with { X = -delta.X };
+            nextX = current.X + delta.X;
+        }
+
+        if (nextY < 0 || nextY > board.MaxNodeY)
+        {
+            delta = delta with { Y = -delta.Y };
+            nextY = current.Y + delta.Y;
+        }
+
+        return new GridNode(nextX, nextY);
     }
 
     private static GridNode ToDelta(int direction) =>

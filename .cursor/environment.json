@@ -1,0 +1,10 @@
+{
+  "$schema": "https://www.cursor.com/schemas/environment.schema.json",
+  "name": "QuantumOuija .NET 8",
+  "user": "ubuntu",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+  "install": "dotnet restore QuantumOuija.sln"
+}

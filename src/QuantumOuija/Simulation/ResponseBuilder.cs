@@ -15,7 +15,7 @@ public sealed class ResponseBuilder
         {
             _response.Clear();
             _response.Append(token.Value);
-            return new ResponseAppendResult(token.Value, terminateResponse: true);
+            return new ResponseAppendResult(token.Value, TerminateResponse: true);
         }
 
         var text = token.Type switch
@@ -27,7 +27,7 @@ public sealed class ResponseBuilder
         };
 
         AppendCollapsingSpaces(text);
-        return new ResponseAppendResult(text, terminateResponse: false);
+        return new ResponseAppendResult(text, TerminateResponse: false);
     }
 
     private void AppendCollapsingSpaces(string text)

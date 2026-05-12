@@ -39,7 +39,7 @@ dotnet restore QuantumOuija.sln
 dotnet run --project src/QuantumOuija/QuantumOuija.csproj
 ```
 
-The Cursor cloud machine used for the initial implementation did not include the `dotnet` SDK, so local build verification requires a machine or agent image with .NET 8+ installed.
+The Cursor cloud machine used for the initial implementation did not include the `dotnet` SDK. The solution was verified after installing .NET SDK 8.0.421 into the agent home directory.
 
 ## Architecture notes
 

@@ -13,7 +13,7 @@ MonoGame DesktopGL was selected over WPF because the prototype needs a real upda
 - Board model with configurable grid spacing.
 - Region mapping with priority-based polygon hit testing.
 - Milton-Bradley-style board layout scaled from the included `assets/ouija_board.jpg`.
-- Quantum RNG abstraction with CURBy API provider, retry/rate-limit handling, entropy caching, and local fallback RNG.
+- Quantum RNG abstraction with CURBy API provider, pulse salt/SHA-512 derivation, retry/rate-limit handling, and local fallback RNG.
 - Replay-friendly generated path records containing direction and distance arrays.
 - Grid movement engine with boundary clamping and optional wraparound.
 - Edge reflection so outward movement bounces the planchette back into the board instead of sticking in corners.

@@ -12,5 +12,6 @@ public sealed record GameOptions
     public bool ShowDebugGrid { get; set; }
     public bool ShowDebugRegions { get; set; }
     public bool ShowDebugNodes { get; set; }
-    public string CurbyEndpoint { get; init; } = "https://random.colorado.edu/api/curbyq/round/latest/data";
+    public string CurbyBaseUri { get; init; } = "https://random.colorado.edu/api";
+    public string CurbyChainId { get; init; } = "bafyriqci6f3st2mg7gq733ho4zvvth32zpy2mtiylixwmhoz6d627eo3jfpmbxepe54u2zdvymonq5sp3armtm4rodxsynsirr5g3xsbd3q4s";
 }

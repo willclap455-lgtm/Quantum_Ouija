@@ -69,7 +69,11 @@ public sealed class QuantumOuijaGame : Game
     {
         var fallback = new FallbackRandomProvider();
         _randomProvider = new CurbyQuantumRandomProvider(
-            new CurbyClientOptions { Endpoint = new Uri(_options.CurbyEndpoint) },
+            new CurbyClientOptions
+            {
+                BaseUri = new Uri(_options.CurbyBaseUri),
+                ChainId = _options.CurbyChainId
+            },
             fallback);
         _pathGenerator = new QuantumPathGenerator(
             _randomProvider,

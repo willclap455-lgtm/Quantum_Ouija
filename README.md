@@ -33,14 +33,13 @@ MonoGame DesktopGL was selected over WPF because the prototype needs a real upda
 
 ## Build/run
 
-This repository targets .NET 8+.
+This repository targets .NET 8+. Cursor Cloud agents build from `.cursor/Dockerfile`, which installs .NET SDK 8.x and adds `dotnet` to PATH.
 
 ```bash
 dotnet restore QuantumOuija.sln
+dotnet build QuantumOuija.sln
 dotnet run --project src/QuantumOuija/QuantumOuija.csproj
 ```
-
-The Cursor cloud machine used for the initial implementation did not include the `dotnet` SDK. The solution was verified after installing .NET SDK 8.0.421 into the agent home directory.
 
 ## Architecture notes
 

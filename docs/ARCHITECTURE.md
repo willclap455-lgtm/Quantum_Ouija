@@ -47,9 +47,9 @@ Implementations:
   - cancellation,
   - retry with exponential backoff,
   - request rate limiting,
-  - entropy byte buffering/caching,
-  - JSON/base64/hex/octet-stream payload normalization,
-  - unbiased integer mapping by rejection sampling,
+  - CURBy chain pulse sampling from `/chains/{chain}/pulses`,
+  - salt extraction and SHA-512 seed expansion using a big-endian counter,
+  - unbiased integer mapping by byte-width rejection sampling,
   - fallback provider on network failure.
 - `FallbackRandomProvider`
   - cryptographic local RNG by default,

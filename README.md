@@ -16,6 +16,7 @@ MonoGame DesktopGL was selected over WPF because the prototype needs a real upda
 - Quantum RNG abstraction with CURBy API provider, retry/rate-limit handling, entropy caching, and local fallback RNG.
 - Replay-friendly generated path records containing direction and distance arrays.
 - Grid movement engine with boundary clamping and optional wraparound.
+- Edge reflection so outward movement bounces the planchette back into the board instead of sticking in corners.
 - Animated planchette movement over all generated nodes.
 - Fading path trail.
 - Debug toggles for grid, regions, and path nodes.

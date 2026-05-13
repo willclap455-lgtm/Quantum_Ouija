@@ -5,6 +5,8 @@ namespace QuantumOuija.Simulation;
 
 public sealed class QuantumPathGenerator
 {
+    private const int MovementSegmentsPerPath = 30;
+
     private readonly IQuantumRandomProvider _randomProvider;
     private readonly GridMovementEngine _movementEngine;
 
@@ -23,9 +25,8 @@ public sealed class QuantumPathGenerator
         GridNode startNode,
         CancellationToken cancellationToken)
     {
-        var length = await _randomProvider.NextIntAsync(100, 500, cancellationToken).ConfigureAwait(false);
-        var directions = await _randomProvider.NextIntsAsync(length, 1, 8, cancellationToken).ConfigureAwait(false);
-        var distances = await _randomProvider.NextIntsAsync(length, 3, 8, cancellationToken).ConfigureAwait(false);
+        var directions = await _randomProvider.NextIntsAsync(MovementSegmentsPerPath, 1, 8, cancellationToken).ConfigureAwait(false);
+        var distances = await _randomProvider.NextIntsAsync(MovementSegmentsPerPath, 3, 25, cancellationToken).ConfigureAwait(false);
         var nodes = _movementEngine.GenerateNodes(board, startNode, directions, distances);
         var endNode = nodes[^1];
         var finalToken = board.ResolveToken(board.NodeToWorld(endNode));

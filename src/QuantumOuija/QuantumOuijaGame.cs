@@ -13,7 +13,8 @@ namespace QuantumOuija;
 
 public sealed class QuantumOuijaGame : Game
 {
-    private const int BottomUiHeight = 190;
+    private const int TopUiHeight = 82;
+    private const int BottomUiHeight = 118;
 
     private readonly GameOptions _options;
     private readonly GraphicsDeviceManager _graphics;
@@ -97,6 +98,7 @@ public sealed class QuantumOuijaGame : Game
             _board.Height,
             GraphicsDevice.Viewport.Width,
             GraphicsDevice.Viewport.Height,
+            TopUiHeight,
             BottomUiHeight);
 
         var startPosition = new Vector2(_board.Width * 0.5f, _board.Height * 0.56f);
@@ -141,6 +143,7 @@ public sealed class QuantumOuijaGame : Game
             _board.Height,
             GraphicsDevice.Viewport.Width,
             GraphicsDevice.Viewport.Height,
+            TopUiHeight,
             BottomUiHeight);
 
         _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearClamp);
@@ -402,19 +405,21 @@ public sealed class QuantumOuijaGame : Game
     private void DrawUi()
     {
         var viewport = GraphicsDevice.Viewport;
+        _spriteBatch.Draw(_pixel, new Rectangle(0, 0, viewport.Width, TopUiHeight), new Color(6, 4, 9, 225));
+        _spriteBatch.Draw(_pixel, new Rectangle(24, 18, viewport.Width - 48, 46), new Color(18, 14, 24, 235));
+
         var panelTop = viewport.Height - BottomUiHeight;
         _spriteBatch.Draw(_pixel, new Rectangle(0, panelTop, viewport.Width, BottomUiHeight), new Color(6, 4, 9, 225));
         _spriteBatch.Draw(_pixel, new Rectangle(24, panelTop + 18, viewport.Width - 48, 46), new Color(25, 20, 32, 235));
-        _spriteBatch.Draw(_pixel, new Rectangle(24, panelTop + 80, viewport.Width - 48, 84), new Color(18, 14, 24, 235));
 
         var question = CanEditQuestion ? _questionInput.Text + "_" : _questionInput.Text;
         var response = string.IsNullOrWhiteSpace(_responseBuilder.Text) ? "..." : _responseBuilder.Text;
         var debug = $"STATE {_state}  PATHS {_completedPathCount}/{_requestedPathCount}  RNG {_randomProvider.Name}  F1 GRID F2 REGIONS F3 NODES ESC CANCEL/QUIT";
 
+        _textRenderer.DrawText(_spriteBatch, _pixel, "RESPONSE: " + response, new Vector2(36, 30), new Color(166, 238, 210), 2, viewport.Width - 72);
         _textRenderer.DrawText(_spriteBatch, _pixel, "QUESTION: " + question, new Vector2(36, panelTop + 30), new Color(215, 205, 180), 2, viewport.Width - 72);
-        _textRenderer.DrawText(_spriteBatch, _pixel, "RESPONSE: " + response, new Vector2(36, panelTop + 94), new Color(166, 238, 210), 2, viewport.Width - 72);
-        _textRenderer.DrawText(_spriteBatch, _pixel, _error ?? _status, new Vector2(36, panelTop + 154), new Color(185, 150, 205), 1, viewport.Width - 72);
-        _textRenderer.DrawText(_spriteBatch, _pixel, debug, new Vector2(36, panelTop + 172), new Color(112, 96, 125), 1, viewport.Width - 72);
+        _textRenderer.DrawText(_spriteBatch, _pixel, _error ?? _status, new Vector2(36, panelTop + 78), new Color(185, 150, 205), 1, viewport.Width - 72);
+        _textRenderer.DrawText(_spriteBatch, _pixel, debug, new Vector2(36, panelTop + 96), new Color(112, 96, 125), 1, viewport.Width - 72);
     }
 
     private bool WasPressed(Keys key, KeyboardState keyboard) =>

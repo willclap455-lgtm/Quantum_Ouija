@@ -20,9 +20,9 @@ public sealed class BoardViewTransform
     public float Scale { get; }
     public Vector2 Offset { get; }
 
-    public static BoardViewTransform Fit(int boardWidth, int boardHeight, int windowWidth, int windowHeight, int bottomUiHeight)
+    public static BoardViewTransform Fit(int boardWidth, int boardHeight, int windowWidth, int windowHeight, int topUiHeight, int bottomUiHeight)
     {
-        var available = new RectF(24, 18, windowWidth - 48, windowHeight - bottomUiHeight - 30);
+        var available = new RectF(24, topUiHeight + 18, windowWidth - 48, windowHeight - topUiHeight - bottomUiHeight - 30);
         var scale = MathF.Min(available.Width / boardWidth, available.Height / boardHeight);
         var width = boardWidth * scale;
         var height = boardHeight * scale;

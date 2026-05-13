@@ -53,14 +53,14 @@ public sealed class BoardRenderer
         foreach (var region in board.Regions)
         {
             var color = region.Token.IsTerminator
-                ? new Color(220, 60, 80, 120)
-                : new Color(170, 120, 255, 105);
+                ? new Color(255, 64, 96, 230)
+                : new Color(205, 96, 255, 220);
 
             for (var i = 0; i < region.Vertices.Count; i++)
             {
                 var a = transform.BoardToScreen(region.Vertices[i]);
                 var b = transform.BoardToScreen(region.Vertices[(i + 1) % region.Vertices.Count]);
-                spriteBatch.DrawLine(pixel, a, b, color, 2f);
+                spriteBatch.DrawLine(pixel, a, b, color, 4f);
             }
         }
     }

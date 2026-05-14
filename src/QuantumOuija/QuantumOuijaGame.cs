@@ -16,6 +16,8 @@ public sealed class QuantumOuijaGame : Game
     private const int TopUiHeight = 82;
     private const int BottomUiHeight = 118;
     private const float PlanchetteBoardSizeRatio = 0.155f;
+    private const float BackspaceInitialRepeatDelaySeconds = 0.35f;
+    private const float BackspaceRepeatIntervalSeconds = 0.045f;
 
     private readonly GameOptions _options;
     private readonly GraphicsDeviceManager _graphics;
@@ -42,6 +44,8 @@ public sealed class QuantumOuijaGame : Game
     private Task<GeneratedPath>? _pathTask;
     private GeneratedPath? _currentPath;
     private GridNode _currentNode;
+    private float _backspaceHeldSeconds;
+    private float _backspaceRepeatSeconds;
     private SimulationState _state = SimulationState.Idle;
     private int _requestedPathCount;
     private int _completedPathCount;
@@ -126,7 +130,7 @@ public sealed class QuantumOuijaGame : Game
     protected override void Update(GameTime gameTime)
     {
         var keyboard = Keyboard.GetState();
-        HandleKeyboard(keyboard);
+        HandleKeyboard(keyboard, gameTime);
         UpdateSession(gameTime);
         _animator.Update(gameTime);
         _trailRenderer.Update(gameTime, _animator.CurrentPosition, _animator.IsRunning);
@@ -178,7 +182,7 @@ public sealed class QuantumOuijaGame : Game
         return Texture2D.FromStream(GraphicsDevice, stream);
     }
 
-    private void HandleKeyboard(KeyboardState keyboard)
+    private void HandleKeyboard(KeyboardState keyboard, GameTime gameTime)
     {
         if (WasPressed(Keys.F1, keyboard))
         {
@@ -195,10 +199,7 @@ public sealed class QuantumOuijaGame : Game
             _options.ShowDebugNodes = !_options.ShowDebugNodes;
         }
 
-        if (WasPressed(Keys.Back, keyboard) && CanEditQuestion)
-        {
-            _questionInput.Backspace();
-        }
+        HandleQuestionEditingKeys(keyboard, (float)gameTime.ElapsedGameTime.TotalSeconds);
 
         if (WasPressed(Keys.Enter, keyboard) && CanStartSession)
         {
@@ -224,6 +225,65 @@ public sealed class QuantumOuijaGame : Game
         {
             _questionInput.Append(e.Character);
         }
+    }
+
+    private void HandleQuestionEditingKeys(KeyboardState keyboard, float elapsedSeconds)
+    {
+        if (!CanEditQuestion)
+        {
+            ResetBackspaceRepeat();
+            return;
+        }
+
+        if (IsQuestionClearHotkeyDown(keyboard))
+        {
+            if (!IsQuestionClearHotkeyDown(_previousKeyboard))
+            {
+                _questionInput.Clear();
+            }
+
+            ResetBackspaceRepeat();
+            return;
+        }
+
+        if (!keyboard.IsKeyDown(Keys.Back))
+        {
+            ResetBackspaceRepeat();
+            return;
+        }
+
+        if (WasPressed(Keys.Back, keyboard))
+        {
+            _questionInput.Backspace();
+            _backspaceHeldSeconds = 0f;
+            _backspaceRepeatSeconds = 0f;
+            return;
+        }
+
+        var previousHeldSeconds = _backspaceHeldSeconds;
+        _backspaceHeldSeconds += elapsedSeconds;
+        if (_backspaceHeldSeconds < BackspaceInitialRepeatDelaySeconds)
+        {
+            return;
+        }
+
+        _backspaceRepeatSeconds += elapsedSeconds;
+        if (previousHeldSeconds < BackspaceInitialRepeatDelaySeconds)
+        {
+            _backspaceRepeatSeconds += BackspaceRepeatIntervalSeconds;
+        }
+
+        while (_backspaceRepeatSeconds >= BackspaceRepeatIntervalSeconds)
+        {
+            _questionInput.Backspace();
+            _backspaceRepeatSeconds -= BackspaceRepeatIntervalSeconds;
+        }
+    }
+
+    private void ResetBackspaceRepeat()
+    {
+        _backspaceHeldSeconds = 0f;
+        _backspaceRepeatSeconds = 0f;
     }
 
     private void StartSession()
@@ -424,7 +484,7 @@ public sealed class QuantumOuijaGame : Game
 
         var question = CanEditQuestion ? _questionInput.Text + "_" : _questionInput.Text;
         var response = string.IsNullOrWhiteSpace(_responseBuilder.Text) ? "..." : _responseBuilder.Text;
-        var debug = $"STATE {_state}  PATHS {_completedPathCount}/{_requestedPathCount}  RNG {_randomProvider.Name}  F1 GRID F2 REGIONS F3 NODES ESC CANCEL/QUIT";
+        var debug = $"STATE {_state}  PATHS {_completedPathCount}/{_requestedPathCount}  RNG {_randomProvider.Name}  CTRL+BACKSPACE CLEAR  F1 GRID F2 REGIONS F3 NODES ESC CANCEL/QUIT";
 
         _textRenderer.DrawText(_spriteBatch, _pixel, "RESPONSE: " + response, new Vector2(36, 30), new Color(166, 238, 210), 2, viewport.Width - 72);
         _textRenderer.DrawText(_spriteBatch, _pixel, "QUESTION: " + question, new Vector2(36, panelTop + 30), new Color(215, 205, 180), 2, viewport.Width - 72);
@@ -434,6 +494,9 @@ public sealed class QuantumOuijaGame : Game
 
     private bool WasPressed(Keys key, KeyboardState keyboard) =>
         keyboard.IsKeyDown(key) && !_previousKeyboard.IsKeyDown(key);
+
+    private static bool IsQuestionClearHotkeyDown(KeyboardState keyboard) =>
+        keyboard.IsKeyDown(Keys.Back) && (keyboard.IsKeyDown(Keys.LeftControl) || keyboard.IsKeyDown(Keys.RightControl));
 
     private bool CanEditQuestion =>
         _state is SimulationState.Idle or SimulationState.Complete or SimulationState.Cancelled or SimulationState.Error;

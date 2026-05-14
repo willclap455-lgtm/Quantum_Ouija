@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
     <AssemblyName>QuantumOuija</AssemblyName>
     <RootNamespace>QuantumOuija</RootNamespace>
+    <ApplicationIcon>../../assets/planchette.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,5 +16,11 @@
   <ItemGroup>
     <None Include="../../assets/ouija_board.jpg" Link="Content/ouija_board.jpg" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../assets/planchette_transparent_orig.png" Link="Content/planchette.png" CopyToOutputDirectory="PreserveNewest" />
+    <EmbeddedResource Include="../../assets/planchette.ico" Link="Icon.ico">
+      <LogicalName>Icon.ico</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="../../assets/planchette.bmp" Link="Icon.bmp">
+      <LogicalName>Icon.bmp</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

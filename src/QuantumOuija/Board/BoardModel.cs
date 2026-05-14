@@ -37,6 +37,7 @@ public sealed class BoardModel
     public int GridSpacingPixels { get; }
     public int MaxNodeX => Width / GridSpacingPixels;
     public int MaxNodeY => Height / GridSpacingPixels;
+    public GridNode CenterNode => WorldToNode(new Vector2(Width * 0.5f, Height * 0.5f));
     public BoardToken DefaultToken { get; }
     public IReadOnlyList<BoardRegion> Regions { get; }
 

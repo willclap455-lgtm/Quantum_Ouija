@@ -5,6 +5,9 @@ namespace QuantumOuija.Simulation;
 
 public sealed class QuantumPathGenerator
 {
+    public const int MinimumPathCount = 30;
+    public const int MaximumPathCount = 60;
+
     private const int MovementSegmentsPerPath = 30;
 
     private readonly IQuantumRandomProvider _randomProvider;
@@ -17,7 +20,7 @@ public sealed class QuantumPathGenerator
     }
 
     public Task<int> GeneratePathCountAsync(CancellationToken cancellationToken) =>
-        _randomProvider.NextIntAsync(70, 100, cancellationToken);
+        _randomProvider.NextIntAsync(MinimumPathCount, MaximumPathCount, cancellationToken);
 
     public async Task<GeneratedPath> GeneratePathAsync(
         int pathIndex,

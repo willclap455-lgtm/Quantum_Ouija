@@ -102,8 +102,7 @@ public sealed class QuantumOuijaGame : Game
             TopUiHeight,
             BottomUiHeight);
 
-        var startPosition = new Vector2(_board.Width * 0.5f, _board.Height * 0.56f);
-        _currentNode = _board.WorldToNode(startPosition);
+        _currentNode = _board.CenterNode;
         _animator = new PlanchetteAnimator(
             _board.NodeToWorld(_currentNode),
             _options.PlanchetteSpeedPixelsPerSecond,
@@ -239,7 +238,8 @@ public sealed class QuantumOuijaGame : Game
         _completedPathCount = 0;
         _currentPath = null;
         _trailRenderer.Clear();
-        _currentNode = _board.WorldToNode(_animator.CurrentPosition);
+        _currentNode = _board.CenterNode;
+        _animator.StartPath(new[] { _board.NodeToWorld(_currentNode) });
         _pathCountTask = _pathGenerator.GeneratePathCountAsync(_sessionCancellation.Token);
         _pathTask = null;
         _state = SimulationState.GeneratingPathCount;
@@ -296,6 +296,7 @@ public sealed class QuantumOuijaGame : Game
     private void BeginNextPathGeneration()
     {
         _state = SimulationState.GeneratingPath;
+        _currentNode = _board.CenterNode;
         _pathTask = _pathGenerator.GeneratePathAsync(_completedPathCount, _board, _currentNode, _sessionCancellation!.Token);
         _status = $"Generating path {_completedPathCount + 1}/{_requestedPathCount}...";
     }

@@ -8,13 +8,13 @@ public static class MiltonBradleyBoardLayout
     {
         var regions = new List<BoardRegion>();
 
-        AddRectangle(regions, "yes", new BoardToken(RegionType.Yes, "YES"), 0.000f, 0.000f, 0.290f, 0.230f, boardWidth, boardHeight, 100);
-        AddRectangle(regions, "no", new BoardToken(RegionType.No, "NO"), 0.710f, 0.000f, 0.290f, 0.230f, boardWidth, boardHeight, 100);
-        AddRectangle(regions, "goodbye", new BoardToken(RegionType.Goodbye, "GOODBYE"), 0.285f, 0.825f, 0.430f, 0.105f, boardWidth, boardHeight, 100);
+        AddRectangle(regions, "yes", new BoardToken(RegionType.Yes, "YES"), 0.000f, 0.000f, 0.328f, 0.230f, boardWidth, boardHeight, 100);
+        AddRectangle(regions, "no", new BoardToken(RegionType.No, "NO"), 0.672f, 0.000f, 0.328f, 0.230f, boardWidth, boardHeight, 100);
+        AddRectangle(regions, "goodbye", new BoardToken(RegionType.Goodbye, "GOODBYE"), 0.285f, 0.825f, 0.430f, 0.118f, boardWidth, boardHeight, 100);
 
-        AddTokenArc(regions, "letters-row-1", "ABCDEFGHIJKLM", 0.122f, 0.878f, 0.335f, 0.130f, 0.068f, 0.120f, boardWidth, boardHeight, RegionType.Letter, 50);
-        AddTokenArc(regions, "letters-row-2", "NOPQRSTUVWXYZ", 0.118f, 0.882f, 0.470f, 0.145f, 0.068f, 0.120f, boardWidth, boardHeight, RegionType.Letter, 50);
-        AddTokenRow(regions, "numbers", "1234567890", 0.245f, 0.775f, 0.730f, 0.045f, 0.085f, boardWidth, boardHeight, RegionType.Number, 50);
+        AddTokenArc(regions, "letters-row-1", "ABCDEFGHIJKLM", 0.122f, 0.865f, 0.310f, 0.155f, 0.058f, 0.145f, boardWidth, boardHeight, RegionType.Letter, 50);
+        AddTokenArc(regions, "letters-row-2", "NOPQRSTUVWXYZ", 0.108f, 0.884f, 0.456f, 0.190f, 0.062f, 0.145f, boardWidth, boardHeight, RegionType.Letter, 50);
+        AddNumberRow(regions, "numbers", "1234567890", 0.229f, 0.767f, 0.735f, 0.053f, 0.040f, 0.110f, 25f, boardWidth, boardHeight, 50);
 
         return new BoardModel(boardWidth, boardHeight, gridSpacingPixels, regions, BoardToken.Space);
     }
@@ -43,6 +43,48 @@ public static class MiltonBradleyBoardLayout
                 regions,
                 $"{rowId}-{value}",
                 new BoardToken(type, value),
+                centerX - tokenWidth * 0.5f,
+                centerY - tokenHeight * 0.5f,
+                tokenWidth,
+                tokenHeight,
+                boardWidth,
+                boardHeight,
+                priority);
+        }
+    }
+
+    private static void AddNumberRow(
+        ICollection<BoardRegion> regions,
+        string rowId,
+        string values,
+        float startX,
+        float endX,
+        float centerY,
+        float endpointTokenWidth,
+        float interiorTokenWidth,
+        float tokenHeight,
+        float interiorLeftOffsetPixels,
+        int boardWidth,
+        int boardHeight,
+        int priority)
+    {
+        var count = values.Length;
+        var interiorLeftOffset = interiorLeftOffsetPixels / boardWidth;
+        for (var index = 0; index < count; index++)
+        {
+            var t = count == 1 ? 0.5f : index / (float)(count - 1);
+            var centerX = MathHelper.Lerp(startX, endX, t);
+            if (index > 0 && index < count - 1)
+            {
+                centerX -= interiorLeftOffset;
+            }
+
+            var tokenWidth = index is 0 || index == count - 1 ? endpointTokenWidth : interiorTokenWidth;
+            var value = values[index].ToString();
+            AddRectangle(
+                regions,
+                $"{rowId}-{value}",
+                new BoardToken(RegionType.Number, value),
                 centerX - tokenWidth * 0.5f,
                 centerY - tokenHeight * 0.5f,
                 tokenWidth,

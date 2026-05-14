@@ -484,7 +484,7 @@ public sealed class QuantumOuijaGame : Game
 
         var question = CanEditQuestion ? _questionInput.Text + "_" : _questionInput.Text;
         var response = string.IsNullOrWhiteSpace(_responseBuilder.Text) ? "..." : _responseBuilder.Text;
-        var debug = $"STATE {_state}  PATHS {_completedPathCount}/{_requestedPathCount}  RNG {_randomProvider.Name}  CTRL+BACKSPACE CLEAR  F1 GRID F2 REGIONS F3 NODES ESC CANCEL/QUIT";
+        var debug = $"STATE {_state}  PATHS {_completedPathCount}/{_requestedPathCount}  RNG {_randomProvider.Name}  CTRL U CLEAR  F1 GRID F2 REGIONS F3 NODES ESC CANCEL/QUIT";
 
         _textRenderer.DrawText(_spriteBatch, _pixel, "RESPONSE: " + response, new Vector2(36, 30), new Color(166, 238, 210), 2, viewport.Width - 72);
         _textRenderer.DrawText(_spriteBatch, _pixel, "QUESTION: " + question, new Vector2(36, panelTop + 30), new Color(215, 205, 180), 2, viewport.Width - 72);
@@ -495,8 +495,11 @@ public sealed class QuantumOuijaGame : Game
     private bool WasPressed(Keys key, KeyboardState keyboard) =>
         keyboard.IsKeyDown(key) && !_previousKeyboard.IsKeyDown(key);
 
-    private static bool IsQuestionClearHotkeyDown(KeyboardState keyboard) =>
-        keyboard.IsKeyDown(Keys.Back) && (keyboard.IsKeyDown(Keys.LeftControl) || keyboard.IsKeyDown(Keys.RightControl));
+    private static bool IsQuestionClearHotkeyDown(KeyboardState keyboard)
+    {
+        var isControlDown = keyboard.IsKeyDown(Keys.LeftControl) || keyboard.IsKeyDown(Keys.RightControl);
+        return isControlDown && (keyboard.IsKeyDown(Keys.U) || keyboard.IsKeyDown(Keys.Back));
+    }
 
     private bool CanEditQuestion =>
         _state is SimulationState.Idle or SimulationState.Complete or SimulationState.Cancelled or SimulationState.Error;

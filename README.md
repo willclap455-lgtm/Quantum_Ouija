@@ -27,7 +27,7 @@ MonoGame DesktopGL was selected over WPF because the prototype needs a real upda
 - Type a question.
 - `Enter`: ask / start a session.
 - Hold `Backspace`: erase the current question.
-- `Ctrl+Backspace`: clear the current question.
+- `Ctrl+U`: clear the current question. `Ctrl+Backspace` also works on platforms that report it as a keyboard shortcut.
 - `Esc`: cancel an active session, or quit when idle.
 - `F1`: toggle grid overlay.
 - `F2`: toggle region overlay.

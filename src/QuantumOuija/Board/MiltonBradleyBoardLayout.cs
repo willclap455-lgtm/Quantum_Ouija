@@ -35,15 +35,9 @@ public static class MiltonBradleyBoardLayout
         AddRectangle(regions, "no", new BoardToken(RegionType.No, "NO"), 0.672f, 0.000f, 0.328f, 0.230f, boardWidth, boardHeight, 100);
         AddRectangle(regions, "goodbye", new BoardToken(RegionType.Goodbye, "GOODBYE"), 0.285f, 0.825f, 0.430f, 0.118f, boardWidth, boardHeight, 100);
 
-<<<<<<< HEAD
-        AddTokenArc(regions, "letters-row-1", "ABCDEFGHIJKLM", 0.122f, 0.865f, 0.310f, 0.155f, 0.058f, 0.145f, boardWidth, boardHeight, RegionType.Letter, 50);
-        AddTokenArc(regions, "letters-row-2", "NOPQRSTUVWXYZ", 0.108f, 0.884f, 0.456f, 0.190f, 0.062f, 0.145f, boardWidth, boardHeight, RegionType.Letter, 50);
-        AddNumberRow(regions, "numbers", "1234567890", 0.229f, 0.767f, 0.735f, 0.053f, 0.040f, 0.110f, 25f, boardWidth, boardHeight, 50);
-=======
         AddTokenArc(regions, "letters-row-1", "ABCDEFGHIJKLM", 0.172f, 0.828f, 0.335f, 0.120f, 0.047f, 0.080f, boardWidth, boardHeight, RegionType.Letter, 50, LetterAdjustments);
         AddTokenArc(regions, "letters-row-2", "NOPQRSTUVWXYZ", 0.172f, 0.828f, 0.465f, 0.105f, 0.047f, 0.080f, boardWidth, boardHeight, RegionType.Letter, 50, LetterAdjustments);
         AddTokenRow(regions, "numbers", "1234567890", 0.260f, 0.740f, 0.699f, 0.040f, 0.080f, boardWidth, boardHeight, RegionType.Number, 50, NumberAdjustments);
->>>>>>> 28b5ac108330702be0dc99c7b3e21dda2e085a99
 
         return new BoardModel(boardWidth, boardHeight, gridSpacingPixels, regions, BoardToken.Space);
     }

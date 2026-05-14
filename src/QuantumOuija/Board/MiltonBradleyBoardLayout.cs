@@ -7,24 +7,34 @@ public static class MiltonBradleyBoardLayout
     private static readonly IReadOnlyDictionary<char, TokenRegionAdjustment> LetterAdjustments =
         new Dictionary<char, TokenRegionAdjustment>
         {
-            ['A'] = new(0.000f, 1.45f),
-            ['M'] = new(0.000f, 1.65f),
-            ['N'] = new(0.014f, 1.00f),
-            ['O'] = new(0.012f, 1.00f),
-            ['Z'] = new(0.000f, 1.55f)
+            ['A'] = new(-0.015f, 1.25f),
+	    ['B'] = new(-0.005f, 1.20f), 
+	    ['H'] = new(0.005f, 1.30f),
+	    ['I'] = new(0.005f, 0.75f),
+	    ['J'] = new(-0.005f, 1.15f), 
+	    ['K'] = new(0.000f, 1.15f),
+            ['M'] = new(0.010f, 1.40f),
+            // 
+	    ['N'] = new(0.000f, 1.020f),
+            ['O'] = new(0.000f, 1.005f),
+	    ['P'] = new(-0.005f, 0.850f),
+	    ['Q'] = new(-0.010f, 1.080f),
+	    ['R'] = new(-0.010f, 1.040f),
+	    ['S'] = new(-0.010f, 1.000f),
+	    ['T'] = new(-0.010f, 1.000f),
+	    ['U'] = new(-0.010f, 1.020f),
+	    ['V'] = new(-0.005f, 1.000f),
+	    ['W'] = new(0.005f, 1.150f),
+	    ['X'] = new(0.005f, 1.030f),
+	    ['Y'] = new(0.005f, 1.000f), 
+
+            ['Z'] = new(0.000f, 1.025f)
         };
 
     private static readonly IReadOnlyDictionary<char, TokenRegionAdjustment> NumberAdjustments =
         new Dictionary<char, TokenRegionAdjustment>
         {
-            ['2'] = new(0.000f, 1.40f),
-            ['3'] = new(-0.020f, 1.45f),
-            ['4'] = new(-0.018f, 1.45f),
-            ['5'] = new(-0.012f, 1.45f),
-            ['6'] = new(-0.006f, 1.45f),
-            ['7'] = new(0.002f, 1.45f),
-            ['8'] = new(0.008f, 1.45f),
-            ['9'] = new(0.014f, 1.45f)
+		['0'] = new(0.005f, 1.000f)
         };
 
     public static BoardModel Create(int boardWidth, int boardHeight, int gridSpacingPixels)
@@ -35,9 +45,9 @@ public static class MiltonBradleyBoardLayout
         AddRectangle(regions, "no", new BoardToken(RegionType.No, "NO"), 0.672f, 0.000f, 0.328f, 0.230f, boardWidth, boardHeight, 100);
         AddRectangle(regions, "goodbye", new BoardToken(RegionType.Goodbye, "GOODBYE"), 0.285f, 0.825f, 0.430f, 0.118f, boardWidth, boardHeight, 100);
 
-        AddTokenArc(regions, "letters-row-1", "ABCDEFGHIJKLM", 0.172f, 0.828f, 0.335f, 0.120f, 0.047f, 0.080f, boardWidth, boardHeight, RegionType.Letter, 50, LetterAdjustments);
-        AddTokenArc(regions, "letters-row-2", "NOPQRSTUVWXYZ", 0.172f, 0.828f, 0.465f, 0.105f, 0.047f, 0.080f, boardWidth, boardHeight, RegionType.Letter, 50, LetterAdjustments);
-        AddTokenRow(regions, "numbers", "1234567890", 0.260f, 0.740f, 0.699f, 0.040f, 0.080f, boardWidth, boardHeight, RegionType.Number, 50, NumberAdjustments);
+        AddTokenArc(regions, "letters-row-1", "ABCDEFGHIJKLM", 0.125f, 0.859f, 0.310f, 0.145f, 0.060f, 0.120f, boardWidth, boardHeight, RegionType.Letter, 50, LetterAdjustments);
+        AddTokenArc(regions, "letters-row-2", "NOPQRSTUVWXYZ", 0.115f, 0.880f, 0.460f, 0.195f, 0.065f, 0.130f, boardWidth, boardHeight, RegionType.Letter, 50, LetterAdjustments);
+        AddTokenRow(regions, "numbers", "1234567890", 0.220f, 0.760f, 0.740f, 0.062f, 0.120f, boardWidth, boardHeight, RegionType.Number, 50, NumberAdjustments);
 
         return new BoardModel(boardWidth, boardHeight, gridSpacingPixels, regions, BoardToken.Space);
     }

@@ -15,6 +15,7 @@ public sealed class QuantumOuijaGame : Game
 {
     private const int TopUiHeight = 82;
     private const int BottomUiHeight = 118;
+    private const float PlanchetteBoardSizeRatio = 0.155f;
 
     private readonly GameOptions _options;
     private readonly GraphicsDeviceManager _graphics;
@@ -326,10 +327,12 @@ public sealed class QuantumOuijaGame : Game
             return;
         }
 
+        var resolvedToken = _board.ResolveToken(GetPlanchetteTipPosition(_animator.CurrentPosition));
+        _currentPath = _currentPath with { FinalToken = resolvedToken };
         _currentNode = _currentPath.EndNode;
         _sessionPaths.Add(_currentPath);
-        var result = _responseBuilder.Append(_currentPath.FinalToken, _completedPathCount == 0);
-        _audio.OnTokenResolved(_currentPath.FinalToken.ToString());
+        var result = _responseBuilder.Append(resolvedToken, _completedPathCount == 0);
+        _audio.OnTokenResolved(resolvedToken.ToString());
         _completedPathCount++;
 
         if (result.TerminateResponse || _completedPathCount >= _requestedPathCount)
@@ -340,7 +343,7 @@ public sealed class QuantumOuijaGame : Game
 
         _pauseRemaining = _options.PauseBetweenPathsSeconds;
         _state = SimulationState.PausingBetweenPaths;
-        _status = $"Resolved {_currentPath.FinalToken}; response now: {_responseBuilder.Text}";
+        _status = $"Resolved {resolvedToken}; response now: {_responseBuilder.Text}";
     }
 
     private void CompleteSession()
@@ -382,7 +385,7 @@ public sealed class QuantumOuijaGame : Game
     private void DrawPlanchette()
     {
         var screen = _transform.BoardToScreen(_animator.RenderPosition);
-        var size = MathF.Min(_transform.Destination.Width, _transform.Destination.Height) * 0.155f;
+        var size = GetPlanchetteBoardSize() * _transform.Scale;
         var destination = new Rectangle(
             (int)(screen.X - size * 0.5f),
             (int)(screen.Y - size * 0.5f),
@@ -391,6 +394,12 @@ public sealed class QuantumOuijaGame : Game
 
         _spriteBatch.Draw(_planchetteTexture, destination, Color.White * 0.92f);
     }
+
+    private float GetPlanchetteBoardSize() =>
+        MathF.Min(_board.Width, _board.Height) * PlanchetteBoardSizeRatio;
+
+    private Vector2 GetPlanchetteTipPosition(Vector2 center) =>
+        center + new Vector2(0, GetPlanchetteBoardSize() * -0.5f);
 
     private void DrawCurrentPathNodes()
     {
